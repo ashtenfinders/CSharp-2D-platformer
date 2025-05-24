@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Reflection.Metadata;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
 
 namespace C_GameProject;
 
@@ -9,22 +11,30 @@ namespace C_GameProject;
 //: is used for inheritance in c sharp, for both implements and extends!
 public class Game1 : Game
 {
-    private Texture2D ballTexture;
+    
     //These members are used for drawing to the screen
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private float ballSpeed;
+    private Texture2D ballTexture;
+    private Vector2 ballPosition;
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
     }
 
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+
+        //BackBufferWidth is width of screen and backBufferHeight is height of screen, obtained from GraphicsDevice (resolution the game is running at) 
+        ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+        ballSpeed = 100f;
 
         base.Initialize();
     }
@@ -45,6 +55,55 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
 
+        //This multiplies by the time of an update call (changes in framerates)
+        //Note: Experiment with what happens if omitting this multiplication!
+        float updatedBallSpeed = ballSpeed* (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+
+        var kstate = Keyboard.GetState();
+
+        //Is the uparrow key being pressed?
+        if (kstate.IsKeyDown(Keys.Up))
+        {
+            ballPosition.Y -= updatedBallSpeed;
+
+        }
+        if (kstate.IsKeyDown(Keys.Down))
+        {
+            ballPosition.Y += updatedBallSpeed;
+        }
+        
+        if (kstate.IsKeyDown(Keys.Left))
+        {
+            ballPosition.X -= updatedBallSpeed;
+        }
+        
+        if (kstate.IsKeyDown(Keys.Right))
+        {
+            ballPosition.X += updatedBallSpeed;
+        }
+
+        //Do not let the ball go out of the bounds of the screen
+        if (ballPosition.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2)
+        {
+            ballPosition.X = _graphics.PreferredBackBufferWidth - ballTexture.Width / 2;
+        }
+        else if (ballPosition.X < ballTexture.Width / 2)
+        {
+            ballPosition.X = ballTexture.Width / 2;
+        }
+
+        if (ballPosition.Y > _graphics.PreferredBackBufferHeight - ballTexture.Height / 2)
+        {
+            ballPosition.Y = _graphics.PreferredBackBufferHeight - ballTexture.Height / 2;
+        }
+        else if (ballPosition.Y < ballTexture.Height / 2)
+        {
+            ballPosition.Y = ballTexture.Height / 2;
+        }
+
+
+
         base.Update(gameTime);
     }
 
@@ -55,7 +114,20 @@ public class Game1 : Game
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
         //Sprite, location, color are the draw params
-        _spriteBatch.Draw(ballTexture, new Vector2(0, 0),  Color.White);
+        //_spriteBatch.Draw(ballTexture, new Vector2(0, 0),  Color.White);
+        //_spriteBatch.Draw(ballTexture, ballPosition, Color.White);
+        _spriteBatch.Draw(
+        ballTexture,
+        ballPosition,
+        null,
+        Color.White,
+        0f,
+        new Vector2(ballTexture.Width / 2, ballTexture.Height / 2),
+        Vector2.One,
+        SpriteEffects.None,
+        0f
+        );
+        
         _spriteBatch.End();
 
 
