@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata;
+using C_GameProject.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,6 +19,13 @@ public class Game1 : Game
     private float ballSpeed;
     private Texture2D ballTexture;
     private Vector2 ballPosition;
+    private Player player;
+
+    private Texture2D spaceTexture;
+
+   
+
+
 
     public Game1()
     {
@@ -33,8 +41,12 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         //BackBufferWidth is width of screen and backBufferHeight is height of screen, obtained from GraphicsDevice (resolution the game is running at) 
-        ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
-        ballSpeed = 100f;
+        //_graphics.ApplyChanges();
+        //player = 
+
+        //ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+        //ballSpeed = 100f;
+        player = new Player(new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), 100f, "character");
 
         base.Initialize();
     }
@@ -44,7 +56,9 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
-        ballTexture = Content.Load<Texture2D>("ball");
+
+        ballTexture = Content.Load<Texture2D>("character");
+        
 
     }
 
@@ -110,6 +124,7 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
+
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
