@@ -5,6 +5,7 @@ namespace C_GameProject.Entities;
 
 public class Player
 {
+    //This will be a sprite texture assigned to the player!
     private string textureName;
     private Vector2 playerPosition;
     private float playerSpeed;
@@ -19,6 +20,9 @@ public class Player
 
 
     }
+
+
+    
     
 
 

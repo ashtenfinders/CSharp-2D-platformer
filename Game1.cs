@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace C_GameProject;
 
-//Note: Game1 contains the core 
+//Note: Game1 contains the core, use game1 as a conductor, where things are called, but does not contain actual game logic (design principles)!
 
 //: is used for inheritance in c sharp, for both implements and extends!
 public class Game1 : Game
