@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Metadata;
 using C_GameProject.Entities;
+using C_GameProject.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,8 +23,9 @@ public class Game1 : Game
     private Player player;
 
     private Texture2D spaceTexture;
+    private AnimatedTexture spriteTexture;
 
-   
+
 
 
 
@@ -32,6 +34,7 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+        spriteTexture = new AnimatedTexture(Vector2.Zero, 0, new Vector2(2f, 2f), 0.5f);
 
     }
 
@@ -44,8 +47,8 @@ public class Game1 : Game
         //_graphics.ApplyChanges();
         //player = 
 
-        //ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
-        //ballSpeed = 100f;
+        ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+        ballSpeed = 100f;
         player = new Player(new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), 100f, "character");
 
         base.Initialize();
@@ -58,6 +61,7 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
 
         ballTexture = Content.Load<Texture2D>("character");
+        spriteTexture.Load(Content, "player-spritemap-v9", 8, 10);
         
 
     }
@@ -65,7 +69,10 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {
             Exit();
+        }
+            
 
         // TODO: Add your update logic here
 
@@ -116,6 +123,9 @@ public class Game1 : Game
             ballPosition.Y = ballTexture.Height / 2;
         }
 
+        float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        spriteTexture.UpdateFrame(elapsed);
+
 
 
         base.Update(gameTime);
@@ -142,9 +152,12 @@ public class Game1 : Game
         SpriteEffects.None,
         0f
         );
-        
         _spriteBatch.End();
 
+        _spriteBatch.Begin();
+        // Replacing the normal SpriteBatch.Draw call to use the version from the "AnimatedTexture" class instead
+        spriteTexture.MergedSheetDrawFrame(_spriteBatch, 8,new Vector2(0,0));
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }

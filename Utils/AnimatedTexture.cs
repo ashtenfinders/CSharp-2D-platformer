@@ -2,6 +2,7 @@ namespace C_GameProject.Utils;
 
 using System.Diagnostics.Contracts;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using C_GameProject.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -11,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 
 //Helper class for handling animated textures
 
-public class AnimationHelper
+public class AnimatedTexture
 {
 
     private int frameCount;
@@ -26,15 +27,17 @@ public class AnimationHelper
     private float totalElapsed;
     //Is the animation currently running?
     private bool isPaused;
-    //The cyrrent rotation, scale and draw depth for the animation
-    public float Rotation, Scale, Depth;
+    //The current rotation, draw depth for the animation
+    public float Rotation, Depth;
+
 
     //The origin point of the animated texture
-    public Vector2 Origin;
+    public Vector2 Origin, Scale;
 
 
 
-    public AnimationHelper(Vector2 origin, float rotation, float scale, float depth)
+
+    public AnimatedTexture(Vector2 origin, float rotation, Vector2 scale, float depth)
     {
         this.Origin = origin;
         this.Rotation = rotation;
@@ -77,6 +80,17 @@ public class AnimationHelper
         int FrameWidth = spriteSheet.Width / frameCount;
         Rectangle sourcerect = new Rectangle(FrameWidth * frame, 0, FrameWidth, spriteSheet.Height);
         batch.Draw(spriteSheet, screenPos, sourcerect, Color.White, Rotation, Origin, Scale, SpriteEffects.None, Depth);
+    }
+    //This is for spritesheets where there are multiple animations, in a grid 
+    public void MergedSheetDrawFrame(SpriteBatch batch, int frame, Vector2 screenPos)
+    {
+        int row = 0;
+        int FrameWidth = spriteSheet.Width / frameCount;
+        int FrameHeight = spriteSheet.Height / 4;
+        Rectangle sourcerect = new Rectangle(FrameWidth * frame, row* FrameHeight, FrameWidth, FrameHeight);
+        batch.Draw(spriteSheet, screenPos, sourcerect, Color.White, Rotation, Origin, Scale, SpriteEffects.None, Depth);
+
+
     }
 
     public bool IsPaused()
